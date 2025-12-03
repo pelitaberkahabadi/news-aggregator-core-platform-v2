@@ -1,0 +1,5 @@
+# Laravel Scheduler Cron Job
+# Run Laravel scheduler every minute
+# The scheduler will handle all scheduled tasks defined in app/Console/Kernel.php
+
+* * * * * cd /var/www/html && /usr/local/bin/php artisan schedule:run >> /var/www/html/storage/logs/cron.log 2>&1

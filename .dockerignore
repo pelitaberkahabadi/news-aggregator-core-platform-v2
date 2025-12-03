@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# IDE and editors
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+.phpactor.json
+
+# Environment files
+.env
+.env.backup
+.env.production
+.env.local
+.env.testing
+
+# Dependencies
+/vendor
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Laravel/Lumen specific
+/storage/logs/*.log
+/storage/framework/cache/data/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+.phpunit.result.cache
+auth.json
+
+# Telegram session files (will be in volumes)
+session.madeline*
+MadelineProto.log
+
+# Database files
+*.sql
+
+# Documentation and config
+README.md
+LICENSE
+*.md
+!DOCKER.md
+
+# OS files
+.DS_Store
+Thumbs.db
+error_log
+
+# Testing
+tests/
+phpunit.xml
+
+# Build artifacts
+/public/build
+/public/hot
+/public/storage
+
+# Other
+/bootstrap/compiled.php
+Homestead.yaml
+Homestead.json
+/.vagrant
