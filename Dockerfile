@@ -2,7 +2,11 @@
 FROM php:8.1-fpm-alpine AS base
 
 # Install system dependencies and PHP extensions
-RUN apk add --no-cache \
+RUN apk add --no-cache --virtual .build-deps \
+    autoconf \
+    g++ \
+    make \
+    && apk add --no-cache \
     postgresql-dev \
     libxml2-dev \
     curl-dev \
@@ -22,8 +26,7 @@ RUN apk add --no-cache \
     gmp \
     zip \
     opcache \
-    && apk del --purge autoconf g++ make \
-    && rm -rf /var/cache/apk/*
+    && apk del .build-deps
 
 # Install Composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -56,16 +59,21 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction --no-progre
 # Create application user and set permissions
 RUN addgroup -g 1000 -S www && \
     adduser -u 1000 -S www -G www && \
+    # Create the root folder if it doesn't exist
+    mkdir -p /var/www/html && \
     chown -R www:www /var/www/html && \
-    chmod -R 755 /var/www/html && \
+    # Create ALL necessary directories, including bootstrap/cache
     mkdir -p /var/www/html/storage/framework/cache/data \
              /var/www/html/storage/framework/sessions \
              /var/www/html/storage/framework/views \
              /var/www/html/storage/logs \
-             /var/www/html/storage/app/madeline && \
-    chown -R www:www /var/www/html/storage && \
-    chmod -R 775 /var/www/html/storage && \
-    chmod -R 775 /var/www/html/bootstrap/cache
+             /var/www/html/storage/app/madeline \
+             /var/www/html/bootstrap/cache && \
+    # Now that they definitely exist, permissions will work
+    chown -R www:www /var/www/html/storage \
+                   /var/www/html/bootstrap/cache && \
+    chmod -R 775 /var/www/html/storage \
+                 /var/www/html/bootstrap/cache
 
 # Copy Docker configuration files
 COPY docker/supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
